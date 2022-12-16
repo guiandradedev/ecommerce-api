@@ -1,0 +1,258 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Permission {
+  USER
+  ADMIN
+  PRIME
+  SELLER
+  PROVIDER
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  permission Permission @default(USER)
+
+  token          UserToken[]
+  address_user   AddressUser[]
+  phone_user     PhoneUser[]
+  product_rating ProductRating[]
+  order          Order[]
+  provider       Provider[]
+
+  @@map("users")
+}
+
+model AddressUser {
+  id      String @id @default(uuid())
+  city    String
+  street  String
+  country String
+  state   String
+  number  Int
+  zipcode String
+
+  user_id  String
+  user     User       @relation(fields: [user_id], references: [id])
+  delivery Delivery[]
+
+  @@map("address_user")
+}
+
+enum PhoneType {
+  phone
+  comercial
+  home
+}
+
+model PhoneUser {
+  id     String    @id @default(uuid())
+  type   PhoneType
+  ddd    Int
+  number Int
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@map("phone_user")
+}
+
+model UserToken {
+  id            String   @id @default(uuid())
+  refresh_token String
+  expires_data  DateTime
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@map("user_token")
+}
+
+model Provider {
+  id          String  @id @default(uuid())
+  cnpj        String  @unique
+  name        String
+  description String
+  photo       String?
+  slug        String  @unique
+
+  active Boolean @default(true)
+
+  owner_id String
+  owner    User   @relation(fields: [owner_id], references: [id])
+
+  address AddressProvider[]
+  phones  PhoneProvider[]
+  product Product[]
+
+  @@map("provider")
+}
+
+model AddressProvider {
+  id      String @id @default(uuid())
+  city    String
+  street  String
+  country String
+  state   String
+  number  Int
+  zipcode String
+
+  provider_id String
+  provider    Provider @relation(fields: [provider_id], references: [id])
+
+  @@map("address_provider")
+}
+
+model PhoneProvider {
+  id     String @id @default(uuid())
+  ddd    Int
+  number Int
+
+  provider_id String
+  provider    Provider @relation(fields: [provider_id], references: [id])
+
+  @@map("phone_provider")
+}
+
+model ProductCategory {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  products    Product[]
+
+  @@map("product_category")
+}
+
+model Product {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  stored      Int    @default(0)
+  sold        Int    @default(0)
+  price       Float
+  offer       Int    @default(0)
+  slug        String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  active Boolean @default(true)
+
+  provider_id String
+  provider    Provider @relation(fields: [provider_id], references: [id])
+
+  category_id String
+  category    ProductCategory @relation(fields: [category_id], references: [id])
+
+  photos     ProductPhoto[]
+  ratings    ProductRating[]
+  order_item OrderItem[]
+
+  @@map("product")
+}
+
+model ProductPhoto {
+  id  String @id @default(uuid())
+  url String
+
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id])
+
+  @@map("product_photo")
+}
+
+model ProductRating {
+  id         String @id @default(uuid())
+  review     String
+  rating     Int
+  product_id String
+  user_id    String
+
+  user    User    @relation(fields: [user_id], references: [id])
+  product Product @relation(fields: [product_id], references: [id])
+
+  @@map("product_rating")
+}
+
+model PaymentType {
+  id           String  @id @default(uuid())
+  name         String
+  installments Int
+  Order        Order[]
+
+  @@map("payment_type")
+}
+
+enum StatusEnum {
+  canceled
+  started
+  processing
+  pending
+  approved
+  refused
+  refunded
+  chargeback
+  error
+}
+
+model Order {
+  id           String     @id @default(uuid())
+  total        Int?
+  status       StatusEnum @default(started)
+  finished     Boolean    @default(false)
+  installments Int?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  payment         PaymentType? @relation(fields: [payment_type_id], references: [id])
+  payment_type_id String?
+
+  user_id  String
+  user     User        @relation(fields: [user_id], references: [id])
+  items    OrderItem[]
+  delivery Delivery[]
+
+  @@map("order")
+}
+
+model OrderItem {
+  id     String @id @default(uuid())
+  price  Float
+  amount Int
+
+  order    Order  @relation(fields: [order_id], references: [id])
+  order_id String
+
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id])
+
+  @@map("order_item")
+}
+
+model Delivery {
+  id      String   @id @default(uuid())
+  arrival DateTime
+
+  order    Order  @relation(fields: [order_id], references: [id])
+  order_id String
+
+  address    AddressUser @relation(fields: [address_id], references: [id])
+  address_id String
+
+  @@map("delivery")
+}
