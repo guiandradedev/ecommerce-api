@@ -6,7 +6,7 @@ type ProductProps = {
     stored: number,
     sold: number,
     price: number,
-    offer: number,
+    offer?: number,
     slug: string,
     active: boolean,
     seller: string, //provider id
