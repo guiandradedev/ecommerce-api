@@ -12,6 +12,7 @@ type ProductProps = {
     seller: string, //provider id
     createdAt: Date,
     updatedAt: Date,
+    category: string[] //categories id
     //later images!
 }
 
