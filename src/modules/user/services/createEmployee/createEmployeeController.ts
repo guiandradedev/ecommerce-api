@@ -8,6 +8,8 @@ import { CreateEmployeeUseCase } from "./createEmployeeUseCase";
 
 export class CreateUserController {
 
+    //only employees with worksFor role ADMIN can create employees
+
     async handle(request: Request, response: Response): Promise<Response> {
         const { name, email, cpf, worksFor }: CreateEmployeeRequest = request.body
 
@@ -20,7 +22,7 @@ export class CreateUserController {
                 name, email, cpf, worksFor
             })
 
-            return response.status(201).json({data: userResponse(user)});
+            return response.status(201).json({data: "User created! Check your email to receive your password!"});
         } catch (error) {
             console.log(error)
             if(error instanceof AppError) {

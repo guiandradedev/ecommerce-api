@@ -1,6 +1,6 @@
 import { Entity } from "@/shared/core/entity";
 
-export type FromSharedDomains = 'CONSUMER' | 'PROVIDER'
+export type FromSharedDomains = 'CONSUMER' | 'WORKER' | 'COMPANY'
 
 type PhoneProps = {
     countryCode: number,

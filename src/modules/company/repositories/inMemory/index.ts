@@ -1,3 +1,2 @@
-export * from './InMemoryProductRepository'
-export * from './InMemoryProductRatingRepository'
-export * from './InMemoryCategoryRepository'
+export * from './InMemoryCompanyRepository'
+export * from './InMemoryCompanyEmployeeRepository'

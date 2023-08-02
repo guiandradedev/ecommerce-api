@@ -1,22 +1,27 @@
 import 'dotenv/config'
 import { describe, it, expect, vitest } from 'vitest'
 import 'reflect-metadata'
-import { InMemoryUserRepository } from '@/modules/user/repositories/inMemory/InMemoryUserRepository'
+import { InMemoryUserRepository } from '@/modules/user/repositories/inMemory'
 import { User } from '@/modules/user/domain'
 import { ErrAlreadyExists, ErrNotFound, } from '@/shared/errors'
 import { InMemoryHashAdapter } from '@/modules/user/adapters/HashAdapter'
 import { InMemoryMailAdapter } from '@/shared/adapters/MailAdapter'
 import { CreateEmployeeUseCase } from './createEmployeeUseCase'
-import { InMemoryCompanyRepository } from '@/modules/company/repositories/inMemory/InMemoryCompanyRepository'
+import { InMemoryCompanyEmployeeRepository, InMemoryCompanyRepository } from '@/modules/company/repositories/inMemory'
+import { Company } from '@/modules/company/domain'
 
 describe('Create User', () => {
 
     const makeSut = async () => {
         const userRepository = new InMemoryUserRepository()
         const companyRepository = new InMemoryCompanyRepository()
+        const companyEmployeeRepository = new InMemoryCompanyEmployeeRepository()
         const hashAdapter = new InMemoryHashAdapter()
         const mailAdapter = new InMemoryMailAdapter()
-        const sut = new CreateEmployeeUseCase(userRepository, hashAdapter, companyRepository, mailAdapter)
+        const sut = new CreateEmployeeUseCase(userRepository, hashAdapter, companyRepository, companyEmployeeRepository, mailAdapter)
+
+        const company = Company.create({active: true, cnpj: "", description: "", name: "", slug: ""})
+        vitest.spyOn(companyRepository, 'findById').mockResolvedValueOnce(company);
 
         return { userRepository, sut, companyRepository }
     }
@@ -40,7 +45,7 @@ describe('Create User', () => {
     it('should throw an error if company does not exists', async () => {
         const { sut, companyRepository } = await makeSut()
 
-        vitest.spyOn(companyRepository, 'findById').mockReturnValue(Promise.resolve(null))
+        vitest.spyOn(companyRepository, 'findById').mockReturnValueOnce(Promise.resolve(null))
 
         const user = sut.execute({
             name: "valid name",

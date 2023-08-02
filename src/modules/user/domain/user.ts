@@ -16,7 +16,6 @@ type UserProps = {
     password: string,
     role: TypeUserRoles,
     address?: Address | Address[],
-    worksFor?: TypeUserWorksFor[]
     phone?: Phone | Phone[],
     active: boolean,
     createdAt: Date
