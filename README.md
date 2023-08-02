@@ -6,10 +6,13 @@
 - [x] Create Domains
 - [x] Create User
 - [x] Authenticate User
-- [ ] Send mail confirmation
-- [ ] Activate Account
+- [x] Send mail confirmation
+- [x] Activate Account
+- [x] Create employee
+- [ ] Create company service
 - [ ] Get users
 - [ ] Update Address (and send message)
 - [ ] Update Phone
 - [ ] Update User
 - [ ] Reset Password
+- [ ] Create product

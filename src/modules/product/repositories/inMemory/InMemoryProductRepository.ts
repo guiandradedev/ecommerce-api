@@ -7,4 +7,10 @@ export class InMemoryProductRepository implements IProductRepository {
     async create(data: Product): Promise<void> {
         this.products.push(data)
     }
+
+    async findBySlug(slug: string): Promise<Product> {
+        const product = this.products.find(product => product.props.slug == slug)
+        if (!product) return null;
+        return product;
+    }
 }
