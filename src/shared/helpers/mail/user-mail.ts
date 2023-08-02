@@ -16,9 +16,15 @@ export interface MailHelperResponse {
     text: string
 }
 
+export interface createEmployeePasswordRequest {
+    to: string,
+    password: string
+}
+
 
 export interface IUserMail {
     authMail(_options: AuthMailRequest): Promise<void>;
     resetPasswordMail({ to, code }: AuthMailRequest): Promise<void>
     passwordResetConfirmationMail({ to }: TypePasswordResetConfirmationMail): Promise<void>
+    createEmployeePassword({ to, password }: createEmployeePasswordRequest): Promise<void>
 }

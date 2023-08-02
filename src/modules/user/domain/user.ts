@@ -4,6 +4,11 @@ import { Phone } from "./phone";
 
 export type TypeUserRoles = 'USER' | 'ADMIN'
 
+export type TypeUserWorksFor = {
+    id: string,
+    role: string
+}
+
 type UserProps = {
     name: string,
     email: string,
@@ -11,6 +16,7 @@ type UserProps = {
     password: string,
     role: TypeUserRoles,
     address?: Address | Address[],
+    worksFor?: TypeUserWorksFor[]
     phone?: Phone | Phone[],
     active: boolean,
     createdAt: Date

@@ -1,6 +1,6 @@
 import { IMailAdapter } from "@/shared/adapters/MailAdapter";
 import { authMail } from "./mails";
-import { AuthMailRequest, TypePasswordResetConfirmationMail, IUserMail } from "./user-mail";
+import { AuthMailRequest, TypePasswordResetConfirmationMail, IUserMail, createEmployeePasswordRequest } from "./user-mail";
 
 export class SendUserMail implements IUserMail {
     constructor(
@@ -54,5 +54,21 @@ export class SendUserMail implements IUserMail {
             to
         })
 
+    }
+
+    async createEmployeePassword({ to, password }: createEmployeePasswordRequest): Promise<void> {
+        await this.mailAdapter.sendMail({
+            host: process.env.MAIL_HOST,
+            port: Number(process.env.MAIL_PORT),
+            auth: {
+                user: process.env.MAIL_USER,
+                password: process.env.MAIL_PASSWORD
+            },
+            body: `<h1>Account created!</h1><h2>Your new password is ${password}</h2>`,
+            from: authMail,
+            subject: "Create Account",
+            text: `Account created!\nYour password is: ${password}`,
+            to
+        })
     }
 }
