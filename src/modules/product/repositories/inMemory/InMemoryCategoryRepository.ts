@@ -8,6 +8,12 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
         if (!category) return null;
         return category;
     }
+
+    async findBySlug(slug: string): Promise<Category> {
+        const category = this.categories.find(category => category.props.slug == slug)
+        if (!category) return null;
+        return category;
+    }
     async create(data: Category): Promise<void> {
         this.categories.push(data)
     }

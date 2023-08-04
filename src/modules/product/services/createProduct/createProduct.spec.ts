@@ -175,7 +175,7 @@ describe('Create Product', () => {
         expect(product).rejects.toBeInstanceOf(ErrInvalidParam)
     })
     it('should throw an error if category does not exists', async () => { 
-        const { sut, company, category1 } = await makeSut()
+        const { sut, company } = await makeSut()
 
         const product = sut.execute({
             name: "valid_name",
