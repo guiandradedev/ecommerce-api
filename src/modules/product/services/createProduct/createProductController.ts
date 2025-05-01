@@ -2,11 +2,12 @@ import { container } from "tsyringe";
 
 import { AppError, ErrInvalidParam, ErrServerError } from "@/shared/errors";
 import { IController } from "@/types/services.types"
-import { FastifyReply, FastifyRequest, RouteShorthandOptions } from "fastify";
+import { FastifyReply, FastifyRequest, FastifySchema, RouteShorthandOptions } from "fastify";
 import { validateInput } from "@/shared/utils/validateInput";
 import { CreateProductRequest } from "../../protocols";
+import z from "zod";
 
-export class createProductController implements IController{
+export class createProductController implements IController {
 
     async handle(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         const { name } = request.body as CreateProductRequest
@@ -33,28 +34,26 @@ export class createProductController implements IController{
         }
     }
 
-    // getSchema(): RouteShorthandOptions {
-    //     return {
-    //         description: 'Fetch user information',
-    //         tags: ['User'],
-    //         summary: 'Get user data',
-    //         response: {
-    //             200: {
-    //                 type: 'object',
-    //                 properties: {
-    //                     status: { type: 'string' },
-    //                     message: { type: 'string' },
-    //                     data: {
-    //                         type: 'object',
-    //                         properties: {
-    //                             id: { type: 'number' },
-    //                             name: { type: 'string' },
-    //                             email: { type: 'string' },
-    //                         },
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //     };
-    // }
+    public getProperties(): RouteShorthandOptions {
+        return {
+            schema: this.getSchema(),
+        };
+    }
+
+    private getSchema(): FastifySchema {
+        const authenticateUserBody = z.object({
+            email: z.string().email(),
+            password: z.string().min(6),
+        });
+    
+        return {
+            description: "Authenticate a user",
+            tags: ["Auth"],
+            summary: "Authenticates a user and returns a token",
+            // body: authenticateUserBody,
+            response: {
+                // 200: successAuthenticateUserResponse,
+            },
+        };
+    }
 };

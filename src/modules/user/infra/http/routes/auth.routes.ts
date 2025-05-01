@@ -12,10 +12,16 @@ export async function authRoutes(app: FastifyTypedInstance) {
 
     const authenticateUserController = new AuthenticateUserController()
     app.post('/login', authenticateUserController.getProperties(), authenticateUserController.handle)
-    app.post('/activate', new ActivateUserController().handle)
-    app.post('/forgot-password', new ForgotPasswordController().handle)
-    app.post('/reset-password', new ResetPasswordController().handle)
 
-    app.post("/social-login", new SocialAuthController().handle);
+    const activateUserController = new ActivateUserController()
+    app.post('/activate', activateUserController.getProperties(), activateUserController.handle)
 
+    const forgotPasswordController = new ForgotPasswordController()
+    app.post('/forgot-password', forgotPasswordController.getProperties(), forgotPasswordController.handle)
+
+    const resetPasswordController = new ResetPasswordController()
+    app.post('/reset-password', resetPasswordController.getProperties(), resetPasswordController.handle)
+
+    const socialAuthController = new SocialAuthController()
+    app.post("/social-login", socialAuthController.getProperties(), socialAuthController.handle);
 }

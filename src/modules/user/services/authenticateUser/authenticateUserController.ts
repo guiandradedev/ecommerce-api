@@ -6,8 +6,9 @@ import { userTokenResponse } from "@/shared/helpers/response";
 import { FastifyReply, FastifyRequest, FastifySchema, RouteShorthandOptions } from "fastify";
 import { validateInput } from "@/shared/utils/validateInput";
 import z from "zod";
+import { IController } from "@/types/services.types";
 
-export class AuthenticateUserController {
+export class AuthenticateUserController implements IController {
 
     async handle(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
         const { email, password } = request.body as AuthenticateUserRequest
