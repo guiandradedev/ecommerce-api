@@ -7,21 +7,11 @@ import { SocialAuthController } from '@/modules/user/services/socialAuth/socialA
 import { FastifyTypedInstance } from '@/types/fastify.types';
 
 export async function authRoutes(app: FastifyTypedInstance) {
-    // app.get('/users', {
-    //     schema: {
-    //         tags: ['users'],
-    //         description: "asdsadas"
-    //     }
-    // }, () => {
-    //     return { message: 'User list' };
-    // });
+    const createUserController = new CreateUserController()
+    app.post('/', createUserController.getProperties(), createUserController.handle)
 
-    // app.get('/status', () => {
-    //     return { status: 'ok' };
-    // });
-
-    app.post('/', new CreateUserController().handle)
-    app.post('/login', new AuthenticateUserController().handle)
+    const authenticateUserController = new AuthenticateUserController()
+    app.post('/login', authenticateUserController.getProperties(), authenticateUserController.handle)
     app.post('/activate', new ActivateUserController().handle)
     app.post('/forgot-password', new ForgotPasswordController().handle)
     app.post('/reset-password', new ResetPasswordController().handle)
