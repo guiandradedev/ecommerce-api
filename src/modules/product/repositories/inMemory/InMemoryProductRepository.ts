@@ -1,5 +1,5 @@
 import { Product } from "@/modules/product/domain";
-import { IProductRepository } from "../IProductRepository";
+import { IProductRepository, ListProductParams } from "../IProductRepository";
 
 export class InMemoryProductRepository implements IProductRepository {
     private readonly products: Product[] = []
@@ -12,5 +12,9 @@ export class InMemoryProductRepository implements IProductRepository {
         const product = this.products.find(product => product.props.slug == slug)
         if (!product) return null;
         return product;
+    }
+
+    async list(params: ListProductParams): Promise<Product[]> {
+        return []
     }
 }

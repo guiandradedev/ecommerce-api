@@ -2,7 +2,7 @@ import { container } from "tsyringe";
 import { AuthenticateUserUseCase } from "./authenticateUserUseCase";
 import { AppError, ErrInvalidParam, ErrServerError } from "@/shared/errors";
 import { AuthenticateUserRequest, successAuthenticateUserResponse } from "@/modules/user/protocols/authenticateUserDTO";
-import { userTokenResponse } from "@/shared/helpers/response";
+import { userTokenResponse } from "@/modules/user/helpers/response";
 import { FastifyReply, FastifyRequest, FastifySchema, RouteShorthandOptions } from "fastify";
 import { validateInput } from "@/shared/utils/validateInput";
 import z from "zod";

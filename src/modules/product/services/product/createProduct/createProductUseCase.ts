@@ -50,6 +50,7 @@ export class CreateProductUseCase {
             sold: 0,
             offer: 0,
             thumbnail: '',
+            rating: 0
         })
 
         await this.productRepository.create(product)

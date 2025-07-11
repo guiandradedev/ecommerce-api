@@ -1,3 +1,5 @@
+import { PrismaCategoryRepository } from "@/modules/product/infra/repositories/prisma/PrismaCategoryRepository";
+import { ICategoryRepository } from "@/modules/product/repositories/";
 import { BcryptHashAdapter, IHashAdapter } from "@/modules/user/adapters/hash";
 import { ISecurityAdapter } from "@/modules/user/adapters/security/ISecurityAdapter";
 import { JwtSecurityAdapter } from "@/modules/user/adapters/security/implementations/JwtSecurityAdapter";
@@ -11,6 +13,8 @@ import { IPaymentAdapter, StripeCheckoutPaymentAdapter } from "@/shared/adapters
 import { container } from "tsyringe";
 
 container.register<ISocialAuthProvider>("GoogleAuthProvider", { useClass: GoogleAuthProvider });
+
+container.register<ICategoryRepository>("CategoryRepository", PrismaCategoryRepository)
 
 container.registerSingleton<IUserRepository>(
     "UserRepository",

@@ -13,6 +13,7 @@ type ProductProps = {
     updatedAt: Date,
     category: string[] //categories id
     thumbnail: string //image id
+    rating: number
     //later images!
 }
 

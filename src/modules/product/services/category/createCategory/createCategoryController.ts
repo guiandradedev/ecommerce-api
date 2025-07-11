@@ -1,30 +1,32 @@
 import { container } from "tsyringe";
 
 import { AppError, ErrInvalidParam, ErrServerError } from "@/shared/errors";
-import { IController } from "@/types/services.types"
+import { Controller, IController } from "@/types/services.types"
 import { FastifyReply, FastifyRequest, FastifySchema, RouteShorthandOptions } from "fastify";
 import { validateInput } from "@/shared/utils/validateInput";
-import { CreateProductRequest } from "../../protocols";
+import { CreateCategoryRequest } from "@/modules/product/protocols";
 import z from "zod";
+import { CreateCategoryUseCase } from "./createCategoryUseCase";
+import { categoryResponse } from "@/modules/product/helpers";
 
-export class createProductController implements IController {
+export class CreateCategoryController implements IController {
 
     async handle(request: FastifyRequest, reply: FastifyReply): Promise<FastifyReply> {
-        const { name } = request.body as CreateProductRequest
-
         try {
-            await validateInput({ name }, ['name', 'email', 'password']);
+            Controller.body(request)
+        
+            const { name, slug } = request.body as CreateCategoryRequest
 
-            // const createUserUseCase = container.resolve(CreateUserUseCase)
+            await validateInput({ name, slug }, ['name', 'slug']);
 
-            // const user = await createUserUseCase.execute({
-            //     name,
-            //     email,
-            //     password
-            // })
+            const createCategoryUseCase = container.resolve(CreateCategoryUseCase)
 
-            // return reply.status(201).send({data: userResponse(user)});
-            return ;
+            const category = await createCategoryUseCase.execute({
+                name,
+                slug
+            })
+
+            return reply.status(201).send({data: categoryResponse(category)})
         } catch (error) {
             console.log(error)
             if(error instanceof AppError) {
@@ -47,9 +49,9 @@ export class createProductController implements IController {
         });
     
         return {
-            description: "Authenticate a user",
-            tags: ["Auth"],
-            summary: "Authenticates a user and returns a token",
+            description: "Create category",
+            tags: ["Category"],
+            summary: "Create a new category",
             // body: authenticateUserBody,
             response: {
                 // 200: successAuthenticateUserResponse,
